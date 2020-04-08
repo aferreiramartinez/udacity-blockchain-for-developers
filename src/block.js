@@ -39,17 +39,20 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const aHash = self.hash;
-            // Recalculate the hash of the Block
-            const fullBlockHash = SHA256(JSON.stringify(self));
+            let currentHash = self.hash;
+            // Make hash of block null
+            self.hash = null;
+            // Calculate the hash value again and store it in a different variable.
+            let newHash = SHA256(JSON.stringify(self)).toString();
+            // Assign the original hash value to the hash property of the block. 
+            self.hash = currentHash;
             // Comparing if the hashes changed
-
-            if(aHash === fullBlockHash) {
+            if(currentHash === newHash) {
                 // Returning the Block is valid
-                resolve(true)
+                resolve(true);
             } else {
                 // Returning the Block is not valid
-                reject(false)
+                reject(false);
             }
         });
     }
@@ -68,10 +71,7 @@ class Block {
         // Decoding the data to retrieve the JSON representation of the object
         // Parse the data to an object to be retrieve.
         // Resolve with the data if the object isn't the Genesis block
-        console.log('cacota')
         if (this.height > 0) {
-            console.log('BData body',JSON.parse(block));
-            console.log('BData ascii',JSON.parse(hex2ascii(this.body)));
             return JSON.parse(hex2ascii(this.body))
         }
         return "Error: Genesis block";

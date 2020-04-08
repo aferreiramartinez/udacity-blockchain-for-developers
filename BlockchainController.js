@@ -118,6 +118,17 @@ class BlockchainController {
         });
     }
 
+    // This endpoint allows you to request the list of Stars registered by an owner
+    getStarsByOwner() {
+        this.app.get("/verifychain", async (req, res) => {
+            if(req) {
+                const messages = await this.blockchain.validateChain();
+                if (messages ) {
+                    res.status(200).json(messages);
+                }
+            }
+        });
+    }
 }
 
 module.exports = (app, blockchainObj) => { return new BlockchainController(app, blockchainObj);}
